@@ -29,7 +29,7 @@ class GameEngine:
     def handle_input(self, user_input):
         user_input = user_input.strip().lower()
         if user_input == 'quit':
-            print("Goodbye!")
+            print("\nGoodbye!")
             return False
         elif user_input == 'look':
             self.print_current_room()
@@ -40,7 +40,7 @@ class GameEngine:
                 direction = user_input.split(' ', 1)[1]
                 self.go(direction)
             except IndexError:
-                print("Sorry, you need to 'go' somewhere.")
+                print("\nSorry, you need to 'go' somewhere.")
         elif user_input == 'get' or user_input.startswith('get '):
             try: 
                 item = user_input.split(' ', 1)[1]
@@ -62,10 +62,10 @@ class GameEngine:
         if direction in room['exits']:
             next_room_id = room['exits'][direction]
             self.player_position = next_room_id
-            print(f"You go {direction}.\n")
+            print(f"\nYou go {direction}.\n")
             self.print_current_room()
         else:
-            print(f"There's no way to go {direction}.")
+            print(f"\nThere's no way to go {direction}.")
         return True
 
     def get(self, item):
@@ -73,9 +73,9 @@ class GameEngine:
         if 'items' in room and item in room['items']:
             room['items'].remove(item)
             self.inventory.append(item)
-            print(f"You pick up the {item}.")
+            print(f"\nYou pick up the {item}.")
         else:
-            print(f"There's no {item} anywhere.")
+            print(f"\nThere's no {item} anywhere.")
 
     def drop(self, item):
         room = self.get_current_room()
@@ -84,9 +84,9 @@ class GameEngine:
                 room['items'] = []
             room['items'].append(item)
             self.inventory.remove(item)
-            print(f"You drop the {item}.")
+            print(f"\nYou drop the {item}.")
         else:
-            print(f"There's no {item} in your inventory.")
+            print(f"\nThere's no {item} in your inventory.")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
