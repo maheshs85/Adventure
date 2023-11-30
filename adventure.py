@@ -20,7 +20,7 @@ class GameEngine:
         print(f"{room['desc']}\n")
         if 'items' in room:
             print("Items: ", " ".join(room['items']), "\n")
-        print("Exits:", " ".join(room['exits']))
+        print("Exits:", " ".join(room['exits']), "\n")
         
     def print_inventory(self):
         print("Inventory:")
@@ -47,6 +47,8 @@ class GameEngine:
                 self.get(item)
             except IndexError:
                 print("Sorry, you need to 'get' something.")
+        else:
+            print("Invalid command.")
         return True       
 
     def go(self, direction):
