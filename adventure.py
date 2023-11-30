@@ -19,12 +19,13 @@ class GameEngine:
         print(f"> {room['name']}\n")
         print(f"{room['desc']}\n")
         if 'items' in room:
-            print("Items:", " ".join(room['items']), "\n")
-        print("Exits:", " ".join(room['exits']), "\n")
+            print("Items:", " ".join(room['items']).strip(), "\n")
+        print("Exits:", " ".join(room['exits']).strip(), "\n")
         
     def print_inventory(self):
         print("Inventory:")
-        print(" ".join(self.inventory))
+        for item in self.inventory:
+            print(f' {item}')
 
     def handle_input(self, user_input):
         user_input = user_input.strip().lower()
@@ -62,10 +63,10 @@ class GameEngine:
         if direction in room['exits']:
             next_room_id = room['exits'][direction]
             self.player_position = next_room_id
-            print(f"\nYou go {direction}.\n")
+            print(f"You go {direction}.\n")
             self.print_current_room()
         else:
-            print(f"\nThere's no way to go {direction}.")
+            print(f"There's no way to go {direction}.")
         return True
 
     def get(self, item):
@@ -73,9 +74,9 @@ class GameEngine:
         if 'items' in room and item in room['items']:
             room['items'].remove(item)
             self.inventory.append(item)
-            print(f"\nYou pick up the {item}.")
+            print(f"You pick up the {item}.")
         else:
-            print(f"\nThere's no {item} anywhere.")
+            print(f"There's no {item} anywhere.")
 
     def drop(self, item):
         room = self.get_current_room()
@@ -84,9 +85,9 @@ class GameEngine:
                 room['items'] = []
             room['items'].append(item)
             self.inventory.remove(item)
-            print(f"\nYou drop the {item}.")
+            print(f"You drop the {item}.")
         else:
-            print(f"\nThere's no {item} in your inventory.")
+            print(f"There's no {item} in your inventory.")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
