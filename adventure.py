@@ -27,7 +27,7 @@ class GameEngine:
         print(" ".join(self.inventory))
 
     def handle_input(self, user_input):
-        user_input = user_input.lower()
+        user_input = user_input.strip().lower()
         if user_input == 'quit':
             print("Goodbye!")
             return False
