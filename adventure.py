@@ -19,7 +19,7 @@ class GameEngine:
         print(f"> {room['name']}\n")
         print(f"{room['desc']}\n")
         if 'items' in room:
-            print("Items: ", " ".join(room['items']), "\n")
+            print("Items:", " ".join(room['items']), "\n")
         print("Exits:", " ".join(room['exits']), "\n")
         
     def print_inventory(self):
@@ -47,6 +47,12 @@ class GameEngine:
                 self.get(item)
             except IndexError:
                 print("Sorry, you need to 'get' something.")
+        elif user_input == 'drop' or user_input.startswith('drop '):
+            try: 
+                item = user_input.split(' ', 1)[1]
+                self.drop(item)
+            except IndexError:
+                print("Sorry, you need to 'drop' something.")
         else:
             print("Invalid command.")
         return True       
@@ -71,6 +77,16 @@ class GameEngine:
         else:
             print(f"There's no {item} anywhere.")
 
+    def drop(self, item):
+        room = self.get_current_room()
+        if item in self.inventory:
+            if 'items' not in room:
+                room['items'] = []
+            room['items'].append(item)
+            self.inventory.remove(item)
+            print(f"You drop the {item}.")
+        else:
+            print(f"There's no {item} in your inventory.")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
