@@ -5,7 +5,7 @@ class GameEngine:
     def __init__(self, map_file):
         self.load_map(map_file)
         self.player_position = 0
-        self.inventory = []
+        self.inv = []
         self.valid_verbs = {'go': '...', 'get': '...', 'look': '', 'inventory': '', 'drop': '...', 'quit': '', 'help': ''}
 
     def load_map(self, map_file):
@@ -28,12 +28,12 @@ class GameEngine:
         print(str)
         
     def inventory(self):
-        if self.inventory != []:
+        if self.inv == []:
             print("You're not carrying anything.")
         else:
             print("Inventory:")
-            for item in self.inventory:
-                print(f' {item}')
+            for item in self.inv:
+                print(f'  {item}')
 
     def handle_input(self, user_input):
         user_input = user_input.strip().lower()
@@ -44,9 +44,9 @@ class GameEngine:
         elif user_input == 'help':
             self.show_help()
         elif user_input == 'look':
-            self.print_current_room()
+            self.look()
         elif user_input == 'inventory':
-            self.print_inventory()
+            self.inventory()
         elif user_input == 'go' or user_input.startswith('go '):
             try:
                 direction = user_input.split(' ', 1)[1]
@@ -84,7 +84,7 @@ class GameEngine:
         room = self.get_current_room()
         if 'items' in room and item in room['items']:
             room['items'].remove(item)
-            self.inventory.append(item)
+            self.inv.append(item)
             print(f"You pick up the {item}.")
         else:
             print(f"There's no {item} anywhere.")
@@ -95,7 +95,7 @@ class GameEngine:
             if 'items' not in room:
                 room['items'] = []
             room['items'].append(item)
-            self.inventory.remove(item)
+            self.inv.remove(item)
             print(f"You drop the {item}.")
         else:
             print(f"There's no {item} in your inventory.")
