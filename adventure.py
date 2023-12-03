@@ -48,7 +48,7 @@ class GameEngine:
                 direction = user_input.split(' ', 1)[1]
                 self.go(direction)
             except IndexError:
-                print("\nSorry, you need to 'go' somewhere.")
+                print("Sorry, you need to 'go' somewhere.")
         elif user_input == 'get' or user_input.startswith('get '):
             try: 
                 item = user_input.split(' ', 1)[1]
