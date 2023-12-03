@@ -19,9 +19,8 @@ class GameEngine:
         room = self.get_current_room()
         print(f"> {room['name']}\n")
         print(f"{room['desc']}\n")
-        if 'items' in room:
+        if 'items' in room and room['items'] != []:
             str = "Items: " + ", ".join(room['items']).strip() + "\n"
-
             print(str)
         
         str = "Exits: " + " ".join(room['exits']).strip() + "\n"
