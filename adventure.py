@@ -20,8 +20,12 @@ class GameEngine:
         print(f"> {room['name']}\n")
         print(f"{room['desc']}\n")
         if 'items' in room:
-            print("Items:", " ".join(room['items']).strip(), "\n")
-        print("Exits:", " ".join(room['exits']).strip(), "\n")
+            str = "Items: " + " ".join(room['items']).strip() + "\n"
+
+            print(str)
+        
+        str = "Exits: " + " ".join(room['exits']).strip() + "\n"
+        print(str)
         
     def inventory(self):
         if self.inventory != []:
