@@ -20,7 +20,7 @@ class GameEngine:
         print(f"> {room['name']}\n")
         print(f"{room['desc']}\n")
         if 'items' in room:
-            str = "Items: " + " ".join(room['items']).strip() + "\n"
+            str = "Items: " + ", ".join(room['items']).strip() + "\n"
 
             print(str)
         
