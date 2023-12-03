@@ -6,6 +6,7 @@ class GameEngine:
         self.load_map(map_file)
         self.player_position = 0
         self.inventory = []
+        self.valid_verbs = {'go': '...', 'get': '...', 'look': '', 'inventory': '', 'drop': '...', 'quit': '', 'help': ''}
 
     def load_map(self, map_file):
         with open(map_file, 'r') as f:
@@ -14,7 +15,7 @@ class GameEngine:
     def get_current_room(self):
         return self.game_map[self.player_position]
 
-    def print_current_room(self):
+    def look(self):
         room = self.get_current_room()
         print(f"> {room['name']}\n")
         print(f"{room['desc']}\n")
@@ -22,16 +23,22 @@ class GameEngine:
             print("Items:", " ".join(room['items']).strip(), "\n")
         print("Exits:", " ".join(room['exits']).strip(), "\n")
         
-    def print_inventory(self):
-        print("Inventory:")
-        for item in self.inventory:
-            print(f' {item}')
+    def inventory(self):
+        if self.inventory != []:
+            print("You're not carrying anything.")
+        else:
+            print("Inventory:")
+            for item in self.inventory:
+                print(f' {item}')
 
     def handle_input(self, user_input):
         user_input = user_input.strip().lower()
+
         if user_input == 'quit':
-            print("\nGoodbye!")
+            print("Goodbye!")
             return False
+        elif user_input == 'help':
+            self.show_help()
         elif user_input == 'look':
             self.print_current_room()
         elif user_input == 'inventory':
@@ -64,7 +71,7 @@ class GameEngine:
             next_room_id = room['exits'][direction]
             self.player_position = next_room_id
             print(f"You go {direction}.\n")
-            self.print_current_room()
+            self.look()
         else:
             print(f"There's no way to go {direction}.")
         return True
@@ -89,6 +96,11 @@ class GameEngine:
         else:
             print(f"There's no {item} in your inventory.")
 
+    def help(self):
+        print("\nYou can run the following commands:")
+        for verb, target in self.valid_verbs.items():
+            print(f"  {verb} {target}")
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python3 adventure.py [map filename]")
@@ -96,7 +108,7 @@ if __name__ == "__main__":
 
     map_filename = sys.argv[1]
     engine = GameEngine(map_filename)
-    engine.print_current_room()
+    engine.look()
     
     while True:
         try:
