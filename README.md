@@ -38,4 +38,4 @@ Example:
   - use ...
 
 ## Drop Verb
-Drop lets you drop items in any room.
+Drop lets you drop items in any room. It is implemented exactly as given in Canvas.
