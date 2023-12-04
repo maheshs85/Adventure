@@ -3,20 +3,19 @@ import json
 
 class GameEngine:
     def __init__(self, map_file):
-        self.load_map(map_file)
+        self._load_map(map_file)
         self.player_position = 0
         self.inv = []
-        self.valid_verbs = {'go': '...', 'get': '...', 'look': '', 'inventory': '', 'drop': '...', 'quit': '', 'help': ''}
 
-    def load_map(self, map_file):
+    def _load_map(self, map_file):
         with open(map_file, 'r') as f:
             self.game_map = json.loads(f.read())
 
-    def get_current_room(self):
+    def _get_current_room(self):
         return self.game_map[self.player_position]
 
     def look(self):
-        room = self.get_current_room()
+        room = self._get_current_room()
         print(f"> {room['name']}\n")
         print(f"{room['desc']}\n")
         if 'items' in room and room['items'] != []:
@@ -34,14 +33,14 @@ class GameEngine:
             for item in self.inv:
                 print(f'  {item}')
 
-    def handle_input(self, user_input):
+    def _handle_input(self, user_input):
         user_input = user_input.strip().lower()
 
         if user_input == 'quit':
             print("Goodbye!")
             return False
         elif user_input == 'help':
-            self.show_help()
+            self.help()
         elif user_input == 'look':
             self.look()
         elif user_input == 'inventory':
@@ -69,18 +68,21 @@ class GameEngine:
         return True       
 
     def go(self, direction):
-        room = self.get_current_room()
+        room = self._get_current_room()
         if direction in room['exits']:
             next_room_id = room['exits'][direction]
-            self.player_position = next_room_id
-            print(f"You go {direction}.\n")
-            self.look()
+            if not self._is_door_locked(next_room_id):
+                self.player_position = next_room_id
+                print(f"You go {direction}.\n")
+                self.look()
+            else:
+                print("The door is locked. You need a key to unlock it.")
         else:
             print(f"There's no way to go {direction}.")
         return True
 
     def get(self, item):
-        room = self.get_current_room()
+        room = self._get_current_room()
         if 'items' in room and item in room['items']:
             room['items'].remove(item)
             self.inv.append(item)
@@ -88,9 +90,12 @@ class GameEngine:
         else:
             print(f"There's no {item} anywhere.")
 
+    def _is_door_locked(self, room_id):
+        return 'locked' in self.game_map[room_id] and 'key' not in self.inv
+
     def drop(self, item):
-        room = self.get_current_room()
-        if item in self.inventory:
+        room = self._get_current_room()
+        if item in self.inv:
             if 'items' not in room:
                 room['items'] = []
             room['items'].append(item)
@@ -101,8 +106,9 @@ class GameEngine:
 
     def help(self):
         print("\nYou can run the following commands:")
-        for verb, target in self.valid_verbs.items():
-            print(f"  {verb} {target}")
+        for method in dir(self):
+            if callable(getattr(self, method)) and not method.startswith("_"):
+                print(f"  {method} {'...' if getattr(self, method).__code__.co_argcount > 1 else ''}")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -116,7 +122,7 @@ if __name__ == "__main__":
     while True:
         try:
             user_input = input("What would you like to do? ")
-            if not engine.handle_input(user_input):
+            if not engine._handle_input(user_input):
                 break
         except EOFError:
             print("\nUse 'quit' to exit.")
